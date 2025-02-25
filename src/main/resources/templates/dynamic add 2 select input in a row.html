@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<form class="row g-3" method="post" action="/addDoctor"
+					enctype="multipart/form-data">
+<!-- you need hidden template because i was having some problem with doctor model in js
+ -->					<!-- Hidden template for specialization dropdown -->
+					<div id="specializationTemplate" style="display: none;">
+						<div class="col-md-6 position-relative specialization-col" style="margin-bottom:15px">
+							<div class="form-floating">
+								<select name="specialization[]" class="form-select">
+									<option value="">Select</option>
+									<option th:each="s : ${specializationsList}"
+										th:value="${s.specializationId}" th:text="${s.name}">
+									</option>
+								</select> <label>Specialization</label>
+							</div>
+							<button type="button" class="btn btn-danger remove-btn"
+								style="position: absolute; top: 50%; right: 20px; transform: translateY(-50%); padding: 5px 10px;">
+								X</button>
+						</div>
+					</div>
+
+					<!-- Specialization Section -->
+					<h5 class="text-center secondary-title bold">Specializations</h5>
+					<div id="specializationContainer"></div>
+					<div  style="margin-top:0px">
+						<button type="button" id="specializationBtn"
+							class="btn btn-secondary next-btn specializationBtn">
+							Add Specialization</button>
+					</div>
+						<div class="text-center">
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+				</form>
+				
+				
+				
+					<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const specializationBtn = document.getElementById("specializationBtn");
+    const specializationContainer = document.getElementById("specializationContainer");
+    const specializationTemplate = document.getElementById("specializationTemplate").innerHTML.trim();
+    let specializationCount = 0;
+
+    function createSpecializationSection() {
+        specializationCount++;
+
+        let lastRow = specializationContainer.lastElementChild;
+
+        // If last row doesn't exist or already has 2 elements, create a new row
+        if (!lastRow || lastRow.children.length >= 2) {
+            lastRow = document.createElement("div");
+            lastRow.classList.add("row", "g-3", "specialization-row");
+            specializationContainer.appendChild(lastRow);
+        }
+
+        // Clone the hidden template and append it
+        const newSpecialization = document.createElement("div");
+        newSpecialization.innerHTML = specializationTemplate;
+        lastRow.appendChild(newSpecialization.firstChild);
+    }
+
+    // Event delegation for removing specialization fields
+    specializationContainer.addEventListener("click", function (event) {
+        if (event.target.classList.contains("remove-btn")) {
+            const specializationCol = event.target.closest(".specialization-col");
+            const row = specializationCol.parentElement;
+
+            specializationCol.remove(); // Remove the column
+            
+            // If the row is empty after removal, remove the row
+            if (row.children.length === 0) {
+                row.remove();
+            }
+        }
+    });
+
+    // Attach event listener to Add Specialization button
+    specializationBtn.addEventListener("click", createSpecializationSection);
+
+    // Auto-create one specialization input on page load
+    createSpecializationSection();
+});
+</script>
+					
+</body>
+</html>

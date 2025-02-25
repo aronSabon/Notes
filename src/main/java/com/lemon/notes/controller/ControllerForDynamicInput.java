@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.apptechnosoft.model.HealthPackage;
 
-public class controller {
+public class ControllerForDynamicInput {
 
 	@PostMapping("/addHealthPackage")
 	private String postHealthPackage(@ModelAttribute HealthPackage healthPackage,@RequestParam MultipartFile image) {
