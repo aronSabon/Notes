@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+.text-wrap3rd td:nth-child(3) {
+     
+   /*   for showing scroll*/
+   white-space: normal;
+    word-break: break-word;
+     white-space: nowrap; 
+    overflow-x: auto; 
+    
+/*     overflow-x: hidden;
+ */    max-width: 300px; /* Optional: Control the column width */
+}
+</style>
+</head>
+<body>
+
+
+
+
+<table
+					class="table display expandable-table table-hover lemon-table text-wrap3rd"
+					id="datatablesSimple">
+					<thead>
+						<tr>
+							<th scope="col"></th>
+							<th scope="col">Name</th>
+							<th scope="col">Description</th>
+							
+							<th scope="col">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="s:${specializationsList}">
+							<td><img alt="no image" th:src="@{'/images/specializationImages/'+ ${s.getImageName}}" width="45px" height="45px" style="border-radius: 50%;"> </td>
+							<td>[[${s.name}]]</td>
+							<td>[[${s.description}]]</td>
+							
+							<td>
+							
+							<a th:href="@{/edit-specialization(specializationId=${s.specializationId})}"><button
+											class="btn btn-sm btn-warning btn-rounded">Edit</button></a> 
+					<a th:href="@{/delete-specialization(specializationId=${s.specializationId})}"><button
+											class="btn btn-sm btn-danger btn-rounded">Delete</button></a>
+                  	
+							</td>
+							
+						</tr>
+					</tbody>
+				</table>
+
+</body>
+</html>
