@@ -1,0 +1,6 @@
+
+to display data of an object list in a table column in a single row seperated by a comma
+<td th:text="${#strings.listJoin(d.specialization.![name], ', ')}"></td>
+
+to display on a paragraph
+<p class="text-muted mb-0" th:text="${#strings.listJoin(doctorModel.specialization.![name], ', ')}"></p>
