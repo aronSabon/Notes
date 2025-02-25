@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+			<form class="row g-3" method="post" action="/updateHealthPackage"
+					enctype="multipart/form-data" th:object="${healthPackageModel}">
+
+<h5 class="text-center secondary-title">Tests And Services</h5>
+					<div id="testsAndServicesContainer">
+						<div class="col-md-12"
+							style="position: relative; margin-bottom: 15px;"
+							th:each="tas, iterStat : ${healthPackageModel.testsAndServices}">
+							<div class="form-floating">
+								<input type="text" class="form-control"
+									th:id="'testsAndServices' + ${iterStat.index}"
+									th:field="*{testsAndServices[__${iterStat.index}__]}"
+									th:value="${tas}" style="padding-right: 40px;"> <label
+									th:for="'testsAndServices' + ${iterStat.index}">Tests
+									And Services</label>
+							</div>
+							<button type="button" class="btn btn-danger remove-btn"
+								style="position: absolute; top: 50%; right: 7px; transform: translateY(-50%); padding: 5px 10px;"
+								onclick="removeTestsAndServices1(this)">X</button>
+						</div>
+					</div>
+
+
+					<div>
+						<button type="button" id="addTestsAndServices"
+							class="btn btn-secondary next-btn testsAndServicesBtn">Add
+							Tests/Services</button>
+					</div>
+					<h5 class="text-center secondary-title">Precautions</h5>
+
+					<div id="precautionsContainer">
+						<div class="col-md-12"
+							style="position: relative; margin-bottom: 15px;"
+							th:each="p, iterStat : ${healthPackageModel.precautions}">
+							<div class="form-floating">
+								<textarea class="form-control"
+									th:id="'precautions' + ${iterStat.index}"
+									th:field="*{precautions[__${iterStat.index}__]}"
+									th:value="${p}" style="padding-right: 40px; height: 75px;"></textarea>
+
+								<label th:for="'precautions' + ${iterStat.index}">Precautions
+								</label>
+							</div>
+							<button type="button" class="btn btn-danger remove-btn"
+								style="position: absolute; top: 50%; right: 7px; transform: translateY(-50%); padding: 5px 10px;"
+								onclick="removePrecautions1(this)">X</button>
+						</div>
+					</div>
+
+
+					<div>
+						<button type="button" id="addPrecautions"
+							class="btn btn-secondary next-btn">Add Precautions</button>
+					</div>
+					
+					<input type="hidden" th:field="*{healthPackageId}">
+
+					<div class="text-center">
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+				</form>
+
+
+<script>
+    // Function to remove the Tests and Services section
+    function removeTestsAndServices1(button) {
+        // Get the parent element of the button and remove it
+        const parentElement = button.closest('.col-md-12');
+        if (parentElement) {
+            parentElement.remove();
+        }
+    }
+    
+    function removePrecautions1(button) {
+        // Get the parent element of the button and remove it
+        const parentElement = button.closest('.col-md-12');
+        if (parentElement) {
+            parentElement.remove();
+        }
+    }
+</script>
+
+		<script>
+		const addTestsAndServicesBtn = document.getElementById('addTestsAndServices');
+		const testsAndServicesContainer = document.getElementById('testsAndServicesContainer');
+		let testsAndServicesCount = 0;
+
+		const addPrecautionsBtn = document.getElementById('addPrecautions');
+		const precautionsContainer = document.getElementById('precautionsContainer');
+		let precautionsCount = 0;
+
+		// Function to create a new Tests and Services section
+		function createTestsAndServicesSection() {
+		    testsAndServicesCount++;
+
+		    const testsAndServicesSection = document.createElement('div');
+		    testsAndServicesSection.classList.add('row', 'g-3', 'testsAndServices-section');
+		    testsAndServicesSection.style.position = 'relative';
+		    testsAndServicesSection.style.marginBottom = '15px';
+
+		    testsAndServicesSection.innerHTML = `
+		        <div class="col-md-12" style="position: relative;">
+		            <div class="form-floating">
+		                <input type="text" class="form-control" id="testsAndServices${testsAndServicesCount}" name="testsAndServices[${testsAndServicesCount}]" style="padding-right: 40px;">
+		                <label for="testsAndServices${testsAndServicesCount}">Tests And Services</label>
+		            </div>
+		            <button type="button" class="btn btn-danger remove-btn" 
+		                style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); padding: 5px 10px;" 
+		                onclick="removeTestsAndServices(this)">X</button>
+		        </div>
+		    `;
+		    testsAndServicesContainer.appendChild(testsAndServicesSection);
+		}
+
+		// Function to create a new Precautions section
+		function createPrecautionsSection() {
+		    precautionsCount++;
+
+		    const precautionsSection = document.createElement('div');
+		    precautionsSection.classList.add('row', 'g-3', 'precautions-section');
+		    precautionsSection.style.position = 'relative';
+		    precautionsSection.style.marginBottom = '15px';
+
+		    precautionsSection.innerHTML = `
+		        <div class="col-md-12" style="position: relative;">
+		            <div class="form-floating">
+		                <textarea class="form-control" id="precautions${precautionsCount}" name="precautions[${precautionsCount}]" style="padding-right: 40px; height: 75px;"></textarea>
+		                <label for="precautions${precautionsCount}">Precautions</label>
+		            </div>
+		            <button type="button" class="btn btn-danger remove-btn" 
+		                style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); padding: 5px 10px;" 
+		                onclick="removePrecautions(this)">X</button>
+		        </div>
+		    `;
+		    precautionsContainer.appendChild(precautionsSection);
+		}
+
+		// Remove a Tests and Services section
+		function removeTestsAndServices(button) {
+		    const testsAndServicesSection = button.closest('.testsAndServices-section');
+		    testsAndServicesSection.remove();
+		}
+
+		// Remove a Precautions section
+		function removePrecautions(button) {
+		    const precautionsSection = button.closest('.precautions-section');
+		    precautionsSection.remove();
+		}
+
+		// Initialize the counters dynamically on page load
+		window.onload = function () {
+		    testsAndServicesCount = document.querySelectorAll('#testsAndServicesContainer .form-control').length;
+		    precautionsCount = document.querySelectorAll('#precautionsContainer .form-control').length;
+		};
+
+		// Add event listener to "Add Tests/Services" and "Add Precautions" buttons
+		addTestsAndServicesBtn.addEventListener('click', createTestsAndServicesSection);
+		addPrecautionsBtn.addEventListener('click', createPrecautionsSection);
+
+</script>
+</body>
+</html>
