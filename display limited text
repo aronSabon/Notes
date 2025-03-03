@@ -1,0 +1,2 @@
+<p th:text="${#strings.length(e.description) > 80 ? #strings.substring(e.description, 0, 80) + '...' : e.description}"></p>
+
