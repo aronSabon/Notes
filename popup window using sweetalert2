@@ -37,3 +37,48 @@
         }
     }
 </script>
+
+
+
+//if you want to include additional details 
+
+
+
+		if(shiftDetail.getSlotStatus().equals(SlotStatus.BOOKED)){
+			LocalTime time = LocalTime.parse(shiftDetail.getStartTime().toString());
+		    String formattedTime = time.format(DateTimeFormatter.ofPattern("h:mm a"));
+			return "redirect:/user/view-doctor?doctorId=" + doctorId + "&bookingFailed=true" + "&time="+ URLEncoder.encode(formattedTime, StandardCharsets.UTF_8);		}
+		
+		
+			<script th:inline="javascript">
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    window.onload = function() {
+        var bookingFailed = getUrlParameter('bookingFailed');
+        var scheduleTime = getUrlParameter('time');
+        console.log('bookingFailed:', bookingFailed, 'scheduleTime:', scheduleTime);
+        if (bookingFailed === 'true' && scheduleTime) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Booking Failed',
+                text: 'Sorry, the schedule you selected at '+ scheduleTime + ' is already booked. Please select another schedule.',
+                confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6',     // Blue button
+                    // Additional customization options:
+                    backdrop: true,                    // Shows a grey overlay
+                    allowOutsideClick: false,          // Prevents closing by clicking outside
+                    allowEscapeKey: false,            // Prevents closing with Escape key
+                    customClass: {
+                        popup: 'animated bounceIn'     // Adds animation
+                    },
+                    timer: 5000,                      // Auto-close after 5 seconds (optional)
+                    timerProgressBar: true            // Shows progress bar if timer is set
+            });
+        }
+    }
+</script>
