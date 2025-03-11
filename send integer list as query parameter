@@ -1,0 +1,3 @@
+			
+			send list of integer as query parameter
+						<a th:href="@{/user/package-patient-already(healthPackageId=${#strings.arrayJoin(healthPackageIdList, ',')})}">
