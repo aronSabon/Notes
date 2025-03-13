@@ -8,3 +8,8 @@
 //this is working perfectly for one admin tab
 //working on multiple admin tabs only if one notification is sent
 //not working when multiple notifications is sent
+
+
+
+//foundout EventSource (SSE) works only on the same computer, not across multiple devices.
+//For real-time updates across different computers, we need WebSocket, which allows bi-directional communication.
