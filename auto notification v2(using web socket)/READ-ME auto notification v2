@@ -1,0 +1,14 @@
+// havent checked the web config is required or not
+
+1) add websocket dependency
+					<dependency>
+					    <groupId>org.springframework.boot</groupId>
+					    <artifactId>spring-boot-starter-websocket</artifactId>
+					</dependency>
+2) create webSocketConfig
+3) create new controller (Notification Handler)
+4) call the notificationHandler method in another method where notification is saved to database
+5) update the notification using javascript
+
+
+//For real-time updates across different computers, we need WebSocket, which allows bi-directional communication.
