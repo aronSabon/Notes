@@ -1,0 +1,57 @@
+//th:if
+
+<li class="dropdown-footer show-all-notifications"><a
+							th:if="${session.notificationsList != null and session.notificationsList.size() > 0}"
+							href="/notification-list">Show all notifications</a></li>
+							
+							
+//th:style
+							<li class="dropdown-footer show-all-notifications"><a
+							th:style="${session.notificationsList != null and session.notificationsList.size() > 0 ? '' : 'display:none;'}"
+							href="/notification-list">Show all notifications</a></li>
+							
+							
+//using script to manipulate
+							
+							<script type="text/javascript">
+//Connect to WebSocket
+var socket = new WebSocket("ws://localhost:1111/ws/notifications");
+console.log("script loaded")
+socket.onmessage = function(event) {
+    var notification = event.data;
+    console.log(notification);
+
+    // For Notification Counter
+    var notificationCountElement = document.querySelector('.notification-count');
+    var dynamicNotificationsContainer = document.querySelector(".dynamic-notifications");
+    var notificationCountTextElement = document.querySelector('.notification-count-text');
+    var viewAllNotification = document.querySelector('.view-all-notification');
+    var showAllNotifications = document.querySelector('.show-all-notifications');
+    console.log('New notification:', notification);
+    alert("new notification");
+
+    // Add notification to UI
+    dynamicNotificationsContainer.insertAdjacentHTML('afterbegin', `
+        <li class="notification-item">
+            <i class="bi bi-info-circle text-primary"></i>
+            <div>
+                <h4>Health Package</h4>
+                <p>${notification}</p>
+                <p style="color:darkgreen;">Just now</p>
+            </div>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+    `);
+
+    // Increment the notification count
+    var currentNotificationCount = parseInt(notificationCountElement.innerText) || 0;
+    currentNotificationCount++;
+    notificationCountElement.innerText = currentNotificationCount;
+    notificationCountTextElement.innerText = currentNotificationCount;  
+    notificationCountElement.style.display = "inline-block"; // ✅ SHOW COUNTER when notification arrives
+	viewAllNotification.style.display = "inline-block";
+    showAllNotifications.style.display = "inline-block";
+
+};
+
+</script>
