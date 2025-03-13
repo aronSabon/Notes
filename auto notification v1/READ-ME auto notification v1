@@ -1,0 +1,10 @@
+// havent checked the web config is required or not
+
+1) create web config
+2) create new controller (AutoNotificationController)
+3) call the autoNotificationController in service impl when a notificatoin is added in the backend
+4) update the notification using javascript
+
+//this is working perfectly for one admin tab
+//working on multiple admin tabs only if one notification is sent
+//not working when multiple notifications is sent
