@@ -1,0 +1,13 @@
+<style>
+td:nth-child(7) {
+     
+   /*   for showing scroll*/
+   white-space: normal;
+    word-break: break-word;
+     white-space: nowrap; 
+    overflow-x: auto; 
+    
+/*     overflow-x: hidden;
+ */    max-width: 300px; /* Optional: Control the column width */
+}
+</style>
