@@ -1,0 +1,6 @@
+C:\Users\ASUS>netstat -ano | findstr :1111
+  TCP    0.0.0.0:1111           0.0.0.0:0              LISTENING       8260
+  TCP    [::]:1111              [::]:0                 LISTENING       8260
+
+C:\Users\ASUS>taskkill /pid 8260 /f
+SUCCESS: The process with PID 8260 has been terminated.

@@ -1,3 +1,7 @@
 //to konw if the object belongs to a model when two or more objects are in a same list
 
  th:if="${t instanceof T(com.apptechnosoft.model.Doctor)}" 
+ 
+ 
+ 
+  th:if="${t.getClass().simpleName == 'Doctor'}"
