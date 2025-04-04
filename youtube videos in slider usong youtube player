@@ -1,0 +1,118 @@
+      
+
+  <!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<!-- YouTube API -->
+<script>
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+</script>
+
+<!-- Main Swiper -->
+<div class="swiper patient_swiper">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide">
+      <div class="video-container">
+        <iframe class="youtube-iframe" width="100%" height="450"
+          src="https://www.youtube.com/embed/KBNey4upFKE?enablejsapi=1"
+          frameborder="0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="swiper-slide">
+      <div class="video-container">
+        <iframe class="youtube-iframe" width="100%" height="450"
+          src="https://www.youtube.com/embed/Bsly5wn2vV8?enablejsapi=1&rel=0"
+          frameborder="0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="swiper-slide">
+      <div class="video-container">
+        <iframe class="youtube-iframe" width="100%" height="450"
+          src="https://www.youtube.com/embed/KBNey4upFKE?enablejsapi=1&rel=0"
+          frameborder="0" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+  <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div>
+</div>
+
+<!-- Thumbnail Swiper -->
+<div class="swiper patient_thumb_swiper">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide">
+      <img src="https://img.youtube.com/vi/KBNey4upFKE/hqdefault.jpg" alt="Thumbnail" />
+    </div>
+    <div class="swiper-slide">
+      <img src="https://img.youtube.com/vi/Bsly5wn2vV8/hqdefault.jpg" alt="Thumbnail" />
+    </div>
+    <div class="swiper-slide">
+      <img src="https://img.youtube.com/vi/KBNey4upFKE/hqdefault.jpg" alt="Thumbnail" />
+    </div>
+  </div>
+</div>
+
+<script>
+  let players = [];
+  let mainSwiper;
+
+  function onYouTubeIframeAPIReady() {
+    const iframes = document.querySelectorAll('.youtube-iframe');
+    iframes.forEach((iframe, index) => {
+      players[index] = new YT.Player(iframe, {
+        events: {
+          'onReady': function () { },
+          'onStateChange': function () { }
+        }
+      });
+    });
+  }
+
+  const thumbSwiper = new Swiper('.patient_thumb_swiper', {
+    spaceBetween: 10,
+    slidesPerView: 3,
+    freeMode: true,
+    watchSlidesProgress: true,
+  });
+
+  mainSwiper = new Swiper('.patient_swiper', {
+    spaceBetween: 10,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    thumbs: {
+      swiper: thumbSwiper,
+    },
+    on: {
+      slideChange: () => {
+        players.forEach(player => player.pauseVideo());
+      }
+    }
+  });
+</script>
+
+<style>
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+}
+
+.video-container iframe {
+  position: absolute;
+  width: 100%;
+  height: 450px;
+  left: 0;
+  top: 0;
+}
+</style>
+
+
