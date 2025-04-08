@@ -1,0 +1,109 @@
+
+
+
+
+
+
+															<!-- version 2 -->
+
+
+<tbody>
+	<!-- Loop over each doctor schedule -->
+	<th:block th:each="ds : ${doctorScheduleList}">
+		<!-- Loop over each shift detail within that schedule -->
+		<th:block th:each="shift : ${ds.shiftDetail}">
+			<tr>
+				<td>[[${ds.doctor.fullName}]]</td>
+				<td>[[${ds.date}]]</td>
+				<td>[[${shift.shift}]]</td>
+				<td>[[${shift.startTime}]]</td>
+				<td>[[${shift.endTime}]]</td>
+				<td>[[${shift.slotStatus}]]</td>
+				<td><a th:href="@{/editShiftDetail(id=${shift.shiftDetailId})}">
+						<button class="icon-btn edit-btn" data-tooltip="Edit"></button>
+				</a> <a
+					th:href="@{/deleteShiftDetail(shiftDetailId=${shift.shiftDetailId}, doctorScheduleId=${ds.doctorScheduleId}, doctor=${doctor?.doctorId}, dateFrom=${dateFrom}, dateTo=${dateTo}, shift=${shift.shift})}">
+						<button class="icon-btn delete-btn" data-tooltip="Delete"></button>
+				</a></td>
+				<td><a
+					th:href="@{/addShiftDetail(doctorScheduleId=${ds.doctorScheduleId}, doctor=${doctor?.doctorId}, dateFrom=${dateFrom}, dateTo=${dateTo}, shift=${shift.shift})}">
+						<button class="icon-btn add-btn" data-tooltip="Add Slot"></button>
+				</a></td>
+			</tr>
+		</th:block>
+	</th:block>
+</tbody>
+
+															<!-- version 3 -->
+
+<tbody>
+	<!-- Loop over each doctor schedule -->
+	<th:block th:each="ds : ${doctorScheduleList}">
+		<!-- Loop over each shift detail in the current doctor schedule -->
+		<th:block th:each="shift, shiftStat : ${ds.shiftDetail}">
+			<tr>
+				<td>[[${ds.doctor.fullName}]]</td>
+				<td>[[${ds.date}]]</td>
+				<td>[[${shift.shift}]]</td>
+				<td>[[${shift.startTime}]]</td>
+				<td>[[${shift.endTime}]]</td>
+				<td>[[${shift.slotStatus}]]</td>
+				<td><a th:href="@{/editShiftDetail(id=${shift.shiftDetailId})}">
+						<button class="icon-btn edit-btn" data-tooltip="Edit"></button>
+				</a> <a
+					th:href="@{/deleteShiftDetail(shiftDetailId=${shift.shiftDetailId}, doctorScheduleId=${ds.doctorScheduleId}, doctor=${doctor?.doctorId}, dateFrom=${dateFrom}, dateTo=${dateTo}, shift=${shift.shift})}">
+						<button class="icon-btn delete-btn" data-tooltip="Delete"></button>
+				</a></td>
+				<td>
+					<!-- Render the Add Slot button only on the first iteration of shift -->
+					<a th:if="${shiftStat.index == 0}"
+					th:href="@{/addShiftDetail(doctorScheduleId=${ds.doctorScheduleId}, doctor=${doctor?.doctorId}, dateFrom=${dateFrom}, dateTo=${dateTo})}">
+						<button class="icon-btn add-btn" data-tooltip="Add Slot"></button>
+				</a>
+				</td>
+			</tr>
+		</th:block>
+	</th:block>
+</tbody>
+
+
+
+															<!-- version 1 -->
+<tbody>
+
+	<tr th:each="ds : ${doctorScheduleList}">
+		<td><div class="text" th:each="shift : ${ds.shiftDetail}">
+				[[${ds.doctor.fullName}]]<br />
+			</div></td>
+		<td><div class="text" th:each="shift : ${ds.shiftDetail}">
+				[[${ds.date}]]<br />
+			</div></td>
+		<td><div class="text" th:each="shift : ${ds.shiftDetail}">
+				[[${shift.shift}]]<br />
+			</div></td>
+		<td><div class="text" th:each="shift : ${ds.shiftDetail}">
+				[[${shift.startTime}]]<br />
+			</div></td>
+		<td><div class="text" th:each="shift : ${ds.shiftDetail}">
+				[[${shift.endTime}]]<br />
+			</div></td>
+		<td><div class="text" th:each="shift : ${ds.shiftDetail}">
+				[[${shift.slotStatus}]]<br />
+			</div></td>
+		<td>
+			<div class="btnn" th:each="shift : ${ds.shiftDetail}">
+				<a th:href="@{/editShiftDetail(id=${shift.shiftDetailId})}"><button
+						data-tooltip="Edit" class=" icon-btn edit-btn"></button></a> <a
+					th:href="@{/deleteShiftDetail(shiftDetailId=${shift.shiftDetailId},(doctorScheduleId=${ds.doctorScheduleId}), doctor=${doctor?.doctorId}, dateFrom=${dateFrom}, dateTo=${dateTo}, shift=${shift.shift})}"><button
+						data-tooltip="Delete" class=" icon-btn delete-btn"></button></a> <br>
+			</div>
+		</td>
+		<td>
+			<div>
+				<a
+					th:href="@{/addShiftDetail(doctorScheduleId=${ds.doctorScheduleId},doctor=${doctor?.doctorId}, dateFrom=${dateFrom}, dateTo=${dateTo}, shift=${shift})}"><button
+						data-tooltip="Add Slot" class=" icon-btn add-btn"></button></a>
+			</div>
+		</td>
+	</tr>
+</tbody>
