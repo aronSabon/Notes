@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+ <title>Appointments</title>
+    <link rel="icon" type="image/x-icon" href="/assets/logo/logo1.png">
+    
+    <!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+<!-- jQuery (required by DataTables) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+<!-- style for lazyloading data table -->
+<style type="text/css">
+.dataTables_wrapper .dataTables_length select {
+    padding: 6px;
+    border-radius: 20px;
+    margin:10px;
+}
+.dataTables_wrapper .dataTables_filter input {
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+</style>
+
+</head>
+
+<body>
+	<div>
+		<!-- ======= Header ======= -->
+		<th:block th:insert="_Header.html"></th:block>
+	</div>
+	<div>
+		<th:block th:insert="_Sidebar.html"></th:block>
+	</div>
+
+
+
+	<main id="main" class="main">
+
+		<div class="pagetitle">
+			<nav style="display: flex; justify-content: flex-end;">
+				<ol class="breadcrumb">
+<!-- 					<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+ -->					<li class="breadcrumb-item active">Appointments</li>
+				</ol>
+			</nav>
+			<h1 style="text-align: center;">Appointments</h1>
+
+		</div>
+		<!-- End Page Title -->
+
+
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">Appointments</h5>
+
+				<!-- Table with hoverable rows -->
+		<!--/* 	<table
+					class="table display expandable-table table-hover lemon-table"
+					id="datatablesSimple">
+					<thead>
+						<tr>
+							<th scope="col">Patient Name</th>
+							<th scope="col">Patient Mobile No</th>
+							<th scope="col">Doctor Name</th>
+							<th scope="col">Date</th>
+							<th scope="col">Time</th>
+							<th scope="col">Room No</th>
+							<th scope="col">Status</th>
+							
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="a:${appointmentList}">
+							<td>[[${a.patient.name}]]</td>
+							<td>[[${a.patient.mobileNo}]]</td>
+							<td>[[${a.doctor.fullName}]]</td>
+							<td>[[${a.date}]]</td>
+							<td>[[${a.time}]]</td>
+							<td>[[${a.doctor.roomNo}]]</td>
+							<td>[[${a.appointmentStatus}]]</td>
+						
+							
+						</tr>
+					</tbody>
+				</table> */-->
+				<table id="appointmentsTable" class="table display expandable-table table-hover lemon-table">
+    <thead>
+        <tr>
+            <th>Patient Name</th>
+            <th>Patient Mobile No</th>
+            <th>Doctor Name</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Room No</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+</table>
+				
+				
+				<!-- End Table with hoverable rows -->
+
+			</div>
+		</div>
+
+	</main>
+	<!-- End #main -->
+
+	<div>
+		<!-- Footer -->
+		<th:block th:insert="_Footer.html"></th:block>
+	</div>
+	<script type="text/javascript">
+	$(document).ready(function () {
+	    $('#appointmentsTable').DataTable({
+	        processing: true,
+	        serverSide: true,
+	        ajax: {
+	            url: '/api/lazy-appointment-list',
+	            type: 'GET',
+	            dataSrc: 'data'
+	        },
+	        columns: [
+	            { data: 'patientName' },
+	            { data: 'patientMobileNo' },
+	            { data: 'doctorName' },
+	            { data: 'date' },
+	            { data: 'time' },
+	            { data: 'roomNo' },
+	            { data: 'status' }
+	        ]
+	    });
+	});
+
+	</script>
+	
+
+</body>
+
+</html>

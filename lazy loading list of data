@@ -1,0 +1,100 @@
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+<!-- jQuery (required by DataTables) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+
+
+
+<table id="appointmentsTable" class="display">
+    <thead>
+        <tr>
+            <th>Patient Name</th>
+            <th>Patient Mobile No</th>
+            <th>Doctor Name</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Room No</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+</table>
+
+
+
+
+
+	<script type="text/javascript">
+	$(document).ready(function () {
+	    $('#appointmentsTable').DataTable({
+	        processing: true,
+	        serverSide: true,
+	        ajax: {
+	            url: '/api/lazy-appointment-list',
+	            type: 'GET',
+	            dataSrc: 'data'
+	        },
+	        columns: [
+	            { data: 'patient.name' },
+	            { data: 'patient.mobileNo' },
+	            { data: 'doctor.fullName' },
+	            { data: 'date' },
+	            { data: 'time' },
+	            { data: 'doctor.roomNo' },
+	            { data: 'appointmentStatus' }
+	        ]
+	    });
+	});
+
+	</script>
+
+
+
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+@Query("SELECT a FROM Appointment a ORDER BY " +
+	       "CASE WHEN a.appointmentStatus = 'BOOKED' THEN 0 ELSE 1 END, " +
+	       "a.date DESC")
+	Page<Appointment> findAllOrderByStatusBookedOnTopAndDateDesc(Pageable pageable);
+	
+	
+	
+	
+	
+	
+@RestController
+@RequestMapping("/api")
+public class ApiController {
+	
+	
+	      @Autowired
+	      private AppointmentService appointmentService;
+
+	         @GetMapping("/lazy-appointment-list")
+	      public Map<String, Object> getAppointments(
+	              @RequestParam(name = "draw", required = false, defaultValue = "1") int draw,
+	              @RequestParam(name = "start", defaultValue = "0") int start,
+	              @RequestParam(name = "length", defaultValue = "10") int length
+	      ) {
+	          int page = start / length;
+	          Pageable pageable = PageRequest.of(page, length);
+	          Page<Appointment> appointmentPage = appointmentService.getAllOrderByStatusBookedOnTopAndDateDesc(pageable);
+
+	          Map<String, Object> response = new HashMap<>();
+	          response.put("draw", draw);
+	          response.put("recordsTotal", appointmentPage.getTotalElements());
+	          response.put("recordsFiltered", appointmentPage.getTotalElements());
+	          response.put("data", appointmentPage.getContent()); // Not "content" — must be "data"
+
+	          return response;
+	      }
+	  }
+	
+	
