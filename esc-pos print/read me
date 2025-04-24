@@ -1,0 +1,29 @@
+	
+	
+	<dependency>
+    <groupId>com.github.anastaciocintra</groupId>
+    <artifactId>escpos-coffee</artifactId>
+    <version>4.0.2</version> <!-- latest as of now -->
+</dependency>
+
+
+
+
+
+@GetMapping("/today-appointment-list")
+	public String todayList(Model model,@RequestParam(required=false) Integer doctorId) {
+		model.addAttribute("doctorList" ,doctorService.getByAppointments_Date(LocalDate.now()));
+		if (doctorId!= null) {
+			model.addAttribute("appointmentList", appointmentService.getByAppointmentStatusAndDateAndDoctor(AppointmentStatus.BOOKED, LocalDate.now(), doctorService.getDoctorById(doctorId)));
+
+		}
+		return "TodayAppointmentList";
+	}
+	
+	@PostMapping("/today-appointment-list")
+	public String postlist(Model model,@RequestParam int doctorId) {
+		model.addAttribute("doctorList" ,doctorService.getByAppointments_Date(LocalDate.now()));
+		model.addAttribute("appointmentList", appointmentService.getByAppointmentStatusAndDateAndDoctor(AppointmentStatus.BOOKED, LocalDate.now(), doctorService.getDoctorById(doctorId)));
+		return "TodayAppointmentList";
+	}
+	
