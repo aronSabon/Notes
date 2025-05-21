@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Already A Patient</title>
+    <link rel="icon" type="image/x-icon" href="/assets/logo/logo1.png">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let verifyBtn = document.getElementById("verifyBtn");
+            let contactInput = document.getElementById("contact");
+            let patientDetails = document.getElementById("patientDetails");
+            let form = document.querySelector("form");
+
+
+            // Initially hide patient details
+            patientDetails.style.display = "none";
+
+            verifyBtn.addEventListener("click", function () {
+                let contact = contactInput.value.trim();
+
+                if (!contact) {
+                    Swal.fire("Error", "Please enter your contact number", "error");
+                    return;
+                }
+					fetch(`/api/verify?contact=${contact}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Patient not found");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                    	
+                        Swal.fire({
+                            title: "Enter your name",
+                            input: "text",
+                            inputPlaceholder: "Your Name",
+                            showCancelButton: true,
+                            allowOutsideClick: false,
+                            confirmButtonText: "Submit",
+                            cancelButtonText: "Cancel",
+                            preConfirm: (name) => {
+                                if (!name) {
+                                    Swal.showValidationMessage("Name cannot be empty!");
+                                    return false;
+                                } else if (name !== data.name) {
+                                    Swal.showValidationMessage("Incorrect name. Try again!");
+                                    return false;
+                                }
+                                return name; // If valid, return the name
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Hide contact number input and verify button
+                                document.getElementById("contactRow").style.display = "none";
+
+                                // Show patient details
+                                patientDetails.style.display = "block";
+                                populatePatientData(contact);
+                            }
+                        });
+                    })
+                    .catch(error => {
+                    	console.log(error);console.log(error);
+                        Swal.fire("Error", error.message, "error");
+                    });
+            });
+            function populatePatientData(contact) {
+                fetch(`/api/details?contact=${contact}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Failed to fetch patient details.");
+                        }
+                        return response.json();
+                    })
+                    .then(patient => {
+                        console.log("Patient Data Received:", patient);
+
+                        if (!patient) {
+                            Swal.fire("Error", "No patient data found.", "error");
+                            return;
+                        }
+
+                        // Ensure patientDetails is visible
+                        document.getElementById("patientDetails").style.display = "block"; // Ensure section is visible
+
+                        // Check and populate each field only if the element exists
+                        const patientFields = [
+                            { id: "name", value: patient.name },
+                            { id: "medicalConcern", value: patient.medicalConcern },
+                            { id: "mobileNo", value: patient.mobileNo },
+                            { id: "email", value: patient.email },
+                            { id: "alternateNumber", value: patient.alternateNumber },
+                            { id: "gender", value: patient.gender },
+                            { id: "age", value: patient.age },
+                            { id: "address", value: patient.address },
+                            { id: "insured" , value: patient.insured},
+                            { id: "patientId", value: patient.id }
+                        ];
+
+                        patientFields.forEach(field => {
+                            const element = document.getElementById(field.id);
+                            if (element) {
+                                element.value = field.value || "";
+                            }
+                        });
+
+                        // Set the hidden field for patientId
+                        const patientIdField = document.querySelector('input[name="patientId"]');
+                        if (patientIdField) {
+                            patientIdField.value = patient.id;
+                        }
+
+                    })
+                    .catch(error => {
+                        console.error("Error fetching patient details:", error);
+                        Swal.fire("Error", "Could not fetch patient details. Try again.", "error");
+                    });
+            }
+            // Prevent form submission on Enter key press
+            form.addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault(); // Prevent form submission
+                }
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <th:block th:insert="/frontend/_header.html"></th:block>
+
+    <div class="appointment-form block">
+        <div class="container">
+            <form th:action="@{/user/patient-already(shiftDetailId=${shiftDetailId},doctorScheduleId=${doctorScheduleId},doctorId=${doctor.doctorId})}" method="post">
+                <h2 class="heading-style text-center" style="margin-bottom: 80px">Verify you are a patient.</h2>
+
+                <div class="row" style="padding-bottom: 40px; margin-bottom: 40px; border-bottom: 1px solid #dee2e6;">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="dname">Doctor Name *</label>
+                            <input type="text" class="form-control" id="dname" th:value="Dr. + ' ' + *{doctor.fullName}" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="appointTime">Appointment Date *</label>
+                            <input type="text" class="form-control" id="dspeciality" th:value="*{bookingDate.date}" name="appointmentDate" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="appointTime">Appointment Time *</label>
+                            <input type="text" class="form-control" id="appointTime" th:value="*{bookingModel.startTime} + ' ' + (*{bookingModel.shift.name() == 'MORNING'} ? 'AM' : 'PM')" readonly name="appointmentTime" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Input and Verify Button -->
+                <div class="row" id="contactRow" style="padding-bottom: 30px">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="contact">Contact Number</label>
+                            <input type="number" id="contact" name="contact" class="form-control" placeholder="Enter Contact Number">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" id="verifyBtn" class="btn btn-primary" style="padding: 5px 20px; margin-top: 36px;">Verify</button>
+                        <a th:href="@{/user/appointment-form(doctorId=${doctor.doctorId}, doctorScheduleId=${doctorScheduleId}, shiftDetailId=${shiftDetailId})}"><button type="button" id="backBtn" class="btn btn-danger" style="padding: 5px 20px; margin-top: 36px;">Back</button></a>
+                        
+                    </div>
+                    
+                </div>
+
+                <!-- Patient Details Section -->
+                <div id="patientDetails">
+                  		<div class="row" style="padding-bottom: 30px">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="name">Your Name *</label>
+							<div class="icon-input d-flex align-items-center gap-2">
+								<i class="fa-solid fa-user"></i> <input type="text"  readonly
+									class="form-control" id="name" name="name" placeholder="Name" />
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="medicalConcern">Medical Concern</label>
+							<div class="icon-input d-flex align-items-center gap-2">
+								<i class="fa-solid fa-notes-medical"></i> <input type="text"
+									class="form-control" id="medicalConcern" name="medicalConcern" placeholder="Medical Concern" readonly />
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="mobileNo">Mobile Number *</label>
+							<div class="icon-input d-flex align-items-center gap-2">
+								<i class="fa-solid fa-mobile-screen-button"></i> <input readonly
+									type="number" class="form-control" id="mobileNo"
+									placeholder="Mobile Number" 
+									name="mobileNo"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="email">Email *</label>
+							<div class="icon-input d-flex align-items-center gap-2">
+								<i class="fa-solid fa-at"></i> <input type="email" readonly
+									class="form-control" id="email" name="email" placeholder="Email" />
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="alternateNumber">Alternate Mobile Number</label>
+							<div class="icon-input d-flex align-items-center gap-2">
+								<i class="fa-solid fa-phone"></i> <input type="number" readonly
+									class="form-control" id="alternateNumber" name="alternateNumber" placeholder="Alternate Mobile Number" />
+							</div>
+						</div>
+					</div>
+	
+				</div>
+
+				<div class="row" style="padding-bottom: 30px">
+
+					<div class="col-md-2">
+							<div class="form-group">
+								<label for="age">Gender *</label>
+								<div class="icon-input d-flex align-items-center gap-2">
+									<i class="fa-solid fa-birthday-cake"></i> <input type="text"
+										readonly class="form-control" id="gender" name="gender"
+										placeholder="Gender" />
+								</div>
+							</div>
+						</div>
+					<div class="col-md-2">
+						<div class="form-group">
+							<label for="age">Age *</label>
+							<div class="icon-input d-flex align-items-center gap-2">
+								<i class="fa-solid fa-birthday-cake"></i> <input type="number" readonly
+									class="form-control" id="age" name="age" placeholder="Age" />
+							</div>
+						</div>
+					</div>
+				<div class="col-md-2">
+							<div class="form-group">
+								<label for="age">Insured *</label>
+								<div class="icon-input d-flex align-items-center gap-2">
+									<i class="fa-solid fa-birthday-cake"></i> <input type="text"
+										readonly class="form-control" id="insured" name="insured"
+										placeholder="Insured" />
+								</div>
+							</div>
+						</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="address">Address *</label>
+							<div class="icon-input d-flex align-items-center gap-2">
+								<i class="fa-solid fa-address-card" style="padding-top: 10px"></i>
+								<input type="text" class="form-control" id="address" readonly
+									placeholder="Address" name="address" />
+							</div>
+						</div>
+					</div>
+				</div>
+				 <input type="hidden" name="patientId">
+				 <button type="submit" class="btn btn-primary mt-3">Proceed To Payment</button>
+                </div>
+                
+               
+
+                
+            </form>
+        </div>
+    </div>
+
+    <th:block th:insert="/frontend/_footer.html"></th:block>
+</body>
+</html>

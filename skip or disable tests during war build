@@ -1,0 +1,24 @@
+If you don’t need tests to run on your CI/build server (or you’ll run them separately), you can skip them:
+
+mvn clean package -DskipTests
+
+
+
+
+
+Or in your pom.xml:
+
+
+<build>
+  <plugins>
+    <plugin>
+      <artifactId>maven-surefire-plugin</artifactId>
+      <configuration>
+        <skipTests>true</skipTests>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
+
+
+This will let Maven go straight to creating the WAR even if the DB connection in tests is broken.

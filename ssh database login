@@ -1,0 +1,12 @@
+If you're using MySQL, run:
+
+mysql -u your_db_user -p
+Then type your DB password when prompted.
+
+ Select the database and delete all students
+USE your_db_name;
+DELETE FROM student;
+
+
+(Optional) Reset the ID auto-increment:
+ALTER TABLE student AUTO_INCREMENT = 1;
