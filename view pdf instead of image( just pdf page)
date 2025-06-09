@@ -1,0 +1,46 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+
+<div class="col-md-12" >
+    <div id="pdf-viewer"></div>
+</div>
+
+
+<script>
+    // Make sure pdf.js is available
+    if (typeof pdfjsLib === 'undefined') {
+        console.error('pdf.js is not loaded.');
+    } else {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+    }
+
+    const renderPDF = async (url) => {
+        try {
+            const pdf = await pdfjsLib.getDocument(url).promise;
+            const viewer = document.getElementById('pdf-viewer');
+            viewer.innerHTML = '';
+
+            const parentWidth = viewer.clientWidth || 600;
+            const scaleFactor = parentWidth / 600;
+
+            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                const page = await pdf.getPage(pageNum);
+                const viewport = page.getViewport({ scale: scaleFactor });
+
+                const canvas = document.createElement('canvas');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                const context = canvas.getContext('2d');
+                await page.render({ canvasContext: context, viewport }).promise;
+
+                viewer.appendChild(canvas);
+            }
+        } catch (err) {
+            console.error('Error loading PDF:', err);
+        }
+    };
+
+    // Use Thymeleaf to inject PDF path dynamically
+    const pdfUrl = '/uploads/newsImages/' + '[[${newsModel.pdfName}]]';
+    renderPDF(pdfUrl);
+</script>

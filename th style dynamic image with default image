@@ -1,0 +1,14 @@
+
+//this also works but more messy
+   <section class="page-header block" th:style="'background-image: url(' + 
+               (${specializationModel.bannerImage} == null or ${specializationModel.bannerImage} == '' 
+                ? @{/front/assets/image/gandhi-hospital-banner-sec-img.jpg} 
+                : @{/uploads/specializationBannerImages/} + ${specializationModel.bannerImage}) + ')'">
+
+
+
+//this is recommended
+<section class="page-header block"
+         th:style="|background-image: url(${#strings.isEmpty(specializationModel.bannerImage) 
+             ? '/front/assets/image/gandhi-hospital-banner-sec-img.jpg' 
+             : '/uploads/specializationBannerImages/' + specializationModel.bannerImage});|">
