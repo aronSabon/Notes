@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FonePay</title>
+
+<link rel="icon" type="image/x-icon" href="/assets/logo/logo1.png">
+
+</head>
+
+<body>
+	<th:block th:insert="/frontend/_header.html"></th:block>
+
+	<!-- start page header html -->
+	<section class="page-header block">
+		<div class="container">
+			<h1 class="h3">FonePay</h1>
+			<div class="breadcrumb">
+				<a href="index.html">FonePay</a> <span class="mx-2"><i
+					class="fa-solid fa-angle-right"></i></span> <span>FonePay</span>
+			</div>
+		</div>
+	</section>
+	<!-- end page header html -->
+	
+	
+	<form method="post" action="/initiatePayment">
+		<label>Amount (NPR):</label> <input type="text" name="amount" required />
+		<button type="submit">Pay with Fonepay</button>
+	</form>
+
+
+
+
+	<th:block th:insert="/frontend/_footer.html"></th:block>
+
+</body>
+</html>
