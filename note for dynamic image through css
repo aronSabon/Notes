@@ -1,0 +1,46 @@
+thymeleaf inline syntaxn(|...|) and expression based syntax th:style
+✅ 1. First Version: Expression-based th:style
+
+<section class="page-header block"
+         th:style="${#strings.isEmpty(specializationModel.bannerImage)} ? 
+         'background-image: url(/front/assets/image/gandhi-hospital-banner-sec-img.jpg)' : 
+         'background-image: url(/uploads/specializationBannerImages/' + specializationModel.bannerImage + ')'">
+         
+🔍 How it works:
+This is using a Spring EL ternary operator inside th:style.
+
+You're passing the entire style string as the result of the expression.
+
+✅ Works correctly if used without the |...| syntax.
+
+⚠️ Make sure the whole expression is wrapped in double quotes.
+
+✅ 2. Second Version: Inline text with ${} inside |...|
+
+<section class="page-header block"
+         th:style="|background-image: url('${#strings.isEmpty(specializationModel.bannerImage) 
+         ? '/front/assets/image/gandhi-hospital-banner-sec-img.jpg' 
+         : '/uploads/specializationBannerImages/' + specializationModel.bannerImage}');|">
+         
+🔍 How it works:
+This is using Thymeleaf's inline text syntax: |...|
+
+Inside it, you embed ${...} expressions directly in the string.
+
+This syntax is typically used when you want to build an attribute string with evaluated expressions inside it.
+
+✅ This version is more concise and HTML-friendly for inline styles and inline scripts.
+
+✅ Which one should you use?
+Aspect	                                          Expression-based version	 	 Inline ${} version
+✅ Simpler logic	                                            ✅ Yes	             	    ✅ Yes
+✅ Supports more complex conditions							✅ Yes				⚠️ Harder inside ${}
+✅ Best for inline CSS attributes							⚠️ Verbose 					✅ Cleaner
+✅ Safe and readable in HTML									⚠️ Can get messy				✅ Yes
+
+✅ Recommendation:
+Use the second version with the |...| syntax if you're setting a CSS style, especially if you're doing it inline like this:
+
+th:style="|background-image: url('${...}');|"
+
+It’s cleaner, easier to read, and better suited for HTML.
