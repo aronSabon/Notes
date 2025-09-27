@@ -1,0 +1,71 @@
+     /*    if (!isValid) {
+            event.preventDefault();
+            alert(errors[0]);  // Show only the first error if multiple exist
+
+            // Activate the tab with the invalid field
+            const invalidTabButton = document.querySelector(`button[data-bs-target='${invalidTabId}']`);
+            
+            if (invalidTabButton) {
+                const tab = new bootstrap.Tab(invalidTabButton);
+                tab.show();
+
+                invalidTabButton.addEventListener('shown.bs.tab', function() {
+                    setTimeout(() => {
+                        const invalidTabContent = document.querySelector(invalidTabId);
+                        if (invalidTabContent) {
+                            invalidTabContent.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'start' 
+                            });
+                            if (elementToFocus) {
+                                elementToFocus.focus();
+                            }
+                        }
+                    }, 50);
+                }, { once: true });
+            }
+        } */
+        
+        
+        
+         if (!isValid) {
+            event.preventDefault();
+            alert(errors[0]);  // Show only the first error
+
+            const invalidTabButton = document.querySelector(
+                `button[data-bs-target='${invalidTabId}']`
+            );
+
+            if (invalidTabButton) {
+                // attach listener BEFORE showing the tab
+                invalidTabButton.addEventListener(
+                    'shown.bs.tab',
+                    function() {
+                        setTimeout(() => {
+                            if (elementToFocus) {
+                                elementToFocus.scrollIntoView({ 
+                                    behavior: 'smooth', 
+                                    block: 'center' 
+                                });
+                                elementToFocus.focus();
+                            }
+                        }, 100);
+                    },
+                    { once: true }
+                );
+
+                const tab = new bootstrap.Tab(invalidTabButton);
+                tab.show();
+            }
+        }
+        
+        
+        /* const titleSelect = document.querySelector("select[name='title']");
+        const membershipSelect = document.querySelector("select[name='membershipType']");
+        const firstNameInput = document.querySelector("input[name='firstName']");
+        const memberImageInput = document.querySelector("input[name='memberImage']");
+        const addressLine1Input = document.querySelector("input[name='address.addressLine1']");
+        const cityInput = document.querySelector("input[name='address.city']");
+        const postalCodeInput = document.querySelector("input[name='address.postalCode']");
+        const emailInput = document.querySelector("input[name='contact.email']");
+        const mobileNumberInput = document.querySelector("input[name='contact.mobileNumber']"); */
